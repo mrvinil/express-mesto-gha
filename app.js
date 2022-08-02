@@ -1,20 +1,28 @@
 const express = require('express');
+const userRoutes = require('./routes/users');
+const cardsRoutes = require('./routes/cards');
 const mongoose = require('mongoose');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-// подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-app.get('/', (req, res) => {
-  res.send({ foo: 'Hello World!' });
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  req.user = {
+    _id: '62e90ecc6edc1960644334a2'
+  };
+  next();
 });
 
-app.post('/', express.json(), (req, res) => {
-  res.send({ ...req.body, from: 'server' });
-});
+app.use('/users', userRoutes);
+app.use('/cards', cardsRoutes);
+
 
 app.listen(PORT, () => {
-  // Если всё работает, консоль покажет, какой порт приложение слушает
   console.log(`App listening on port ${PORT}`);
 });
+
+// TODO: Обработка ошибок
