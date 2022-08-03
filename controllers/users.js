@@ -9,13 +9,15 @@ const getAllUsers = (req, res) => {
 
 const getUser = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) => res.send({ user }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(ERR_BAD_REQUEST).send({ message: 'Пользователь по указанному id не найден' });
-      } else {
-        res.status(ERR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    .then((user) => {
+      if (!user) {
+        res.status(ERR_NOT_FOUND).send({ message: 'Пользователь по указанному id не найден' });
+        return;
       }
+      res.send({ user });
+    })
+    .catch(() => {
+      res.status(ERR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
