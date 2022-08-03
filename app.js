@@ -20,9 +20,6 @@ app.use((req, res, next) => {
 app.use('/users', userRoutes);
 app.use('/cards', cardsRoutes);
 
-
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
-
-// TODO: Обработка ошибок
