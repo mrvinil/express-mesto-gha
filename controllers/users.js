@@ -9,7 +9,7 @@ const getAllUsers = (req, res) => {
 
 const getUser = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) => res.send( { user }))
+    .then((user) => res.send({ user }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERR_BAD_REQUEST).send({ message: 'Пользователь по указанному id не найден' });
@@ -22,7 +22,7 @@ const getUser = (req, res) => {
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then(user => res.send({ user }))
+    .then((user) => res.send({ user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании пользователя' });
@@ -64,4 +64,6 @@ const updateAvatar = (req, res) => {
     });
 };
 
-module.exports = { getAllUsers, getUser, createUser, updateUser, updateAvatar };
+module.exports = {
+  getAllUsers, getUser, createUser, updateUser, updateAvatar,
+};
