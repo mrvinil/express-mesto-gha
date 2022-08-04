@@ -12,13 +12,13 @@ const createCards = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => res.send({ card }))
+    .then((card) => res.status(201).send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании карточки' });
-      } else {
-        res.status(ERR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+        return;
       }
+      res.status(ERR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -47,7 +47,7 @@ const likeCard = (req, res) => {
         res.status(ERR_NOT_FOUND).send({ message: 'Передан несуществующий id карточки' });
         return;
       }
-      res.send({ card });
+      res.status(201).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
