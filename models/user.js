@@ -6,17 +6,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     minLength: [2, 'Имя должно содержать минимум 2 символа, вы ввели {VALUE}'],
     maxLength: [30, 'Имя должно содержать максимум 30 символов, вы ввели {VALUE}'],
-    required: [true, 'Имя обязательно для заполнения'],
+    default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
     minLength: [2, 'О себе должно содержать минимум 2 символа, вы ввели {VALUE}'],
     maxLength: [30, 'О себе должно содержать максимум 30 символов, вы ввели {VALUE}'],
-    required: [true, 'О себе обязательно для заполнения'],
+    default: 'Исследователь',
   },
   avatar: {
     type: String,
-    required: [true, 'Аватар обязательно для заполнения'],
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
     type: String,
