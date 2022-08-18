@@ -12,7 +12,7 @@ const cardSchema = new mongoose.Schema({
     required: [true, 'Картинка обязательно для заполнения'],
     validate: {
       validator(v) {
-        return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/.test(v);
+        return /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-/]))?/.test(v);
       },
       message: 'Неверный URL.',
     },
