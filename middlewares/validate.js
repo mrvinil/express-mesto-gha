@@ -1,5 +1,8 @@
 const { celebrate, Joi } = require('celebrate');
 
+// eslint-disable-next-line no-useless-escape
+const linkRegExp = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+
 const idValidation = celebrate({
   params: Joi.object().keys({
     _id: Joi.string().alphanum().length(24).hex(),
@@ -17,7 +20,7 @@ const userValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(20),
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().pattern(linkRegExp),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -26,7 +29,7 @@ const userValidation = celebrate({
 const cardValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().uri(),
+    link: Joi.string().pattern(linkRegExp),
   }),
 });
 
@@ -39,7 +42,7 @@ const userAboutValidation = celebrate({
 
 const avatarValidation = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().uri(),
+    avatar: Joi.string().pattern(linkRegExp),
   }),
 });
 

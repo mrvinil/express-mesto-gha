@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
+const { linkRegExp } = require('../middlewares/validate');
 const Auth = require('../errors/Auth');
 
 const userSchema = new mongoose.Schema({
@@ -19,8 +20,8 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     validate: {
-      validator(v) {
-        return /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-/]))?/.test(v);
+      validator(link) {
+        return linkRegExp.test(link);
       },
       message: 'Неверный URL.',
     },

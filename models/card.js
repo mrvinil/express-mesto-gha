@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { linkRegExp } = require('../middlewares/validate');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -11,8 +12,8 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Картинка обязательно для заполнения'],
     validate: {
-      validator(v) {
-        return /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-/]))?/.test(v);
+      validator(link) {
+        return linkRegExp.test(link);
       },
       message: 'Неверный URL.',
     },
