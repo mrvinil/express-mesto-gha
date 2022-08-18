@@ -8,22 +8,22 @@ const BadRequest = require('../errors/BadRequest');
 
 const getAllUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send({ users }))
+    .then((users) => res.send(users))
     .catch(next);
 };
 
 const getUser = (req, res, next) => {
-  User.findById(req.params.userId)
+  const id = (req.params.userId === undefined ? req.user._id : req.params.userId);
+  User.findById(id)
     .then((user) => {
       if (!user) {
-        next(new NotFound('Пользователь по указанному id не найден'));
-        return;
+        throw new NotFound('Пользователь по указанному id не найден');
       }
       res.send({ user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequest('Переданы некорректные данные'));
+        next(new BadRequest('Переданы некорректные данные'));
       }
       return next(err);
     });
