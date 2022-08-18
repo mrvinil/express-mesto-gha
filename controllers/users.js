@@ -41,17 +41,16 @@ const createUser = (req, res, next) => {
       name, about, avatar, email, password: hash,
     }))
     .then((user) => res.send({
-      _id: user._id, name, about, avatar, email,
+      data: {
+        name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+      },
     }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return next(new BadRequest('Неверный запрос'));
+      if (err.name === 'MongoError' && err.code === 11000) {
+        throw new Conflict('Пользователь с таким email уже существует');
       }
-      if (err.code === 11000) {
-        return next(new Conflict('Пользователь с таким email уже существует'));
-      }
-      return next(err);
-    });
+    })
+    .catch(next);
 };
 
 const updateUser = (req, res, next) => {
