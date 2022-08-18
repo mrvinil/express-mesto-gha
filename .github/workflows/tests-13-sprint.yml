@@ -3,7 +3,7 @@ name: Tests 13 sprint
 on:
   push:
     branches:
-      - 'main'
+      - 'develop'
     tags:
       - '**'
 
