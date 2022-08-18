@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { isEmail } = require('validator');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFound = require('../errors/NotFound');
@@ -36,21 +37,28 @@ const createUser = (req, res, next) => {
     email,
     password,
   } = req.body;
-  bcrypt.hash(password, 10)
-    .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
-    }))
-    .then((user) => res.send({
-      data: {
-        name: user.name, about: user.about, avatar: user.avatar, email: user.email,
-      },
-    }))
-    .catch((err) => {
-      if (err.name === 'MongoError' && err.code === 11000) {
-        throw new Conflict('Пользователь с таким email уже существует');
-      }
-    })
-    .catch(next);
+  if (!isEmail(email)) {
+    next(new BadRequest('Некорректные данные'));
+  } else {
+    bcrypt.hash(password, 10)
+      .then((hash) => User.create({
+        email, password: hash, name, about, avatar,
+      })
+        .then((user) => {
+          // eslint-disable-next-line no-shadow
+          const { password, ...response } = user._doc;
+          res.send({ response });
+        })
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            next(new BadRequest('Некорректные данные'));
+          } else if (err.code === 11000) {
+            next(new Conflict('Email уже зарегистрирован'));
+          } else {
+            next(err);
+          }
+        }));
+  }
 };
 
 const updateUser = (req, res, next) => {
