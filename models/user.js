@@ -1,5 +1,5 @@
-const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const { isEmail } = require('validator');
 const { linkRegExp } = require('../middlewares/validate');
 const Auth = require('../errors/Auth');
@@ -41,7 +41,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Пароль обязателен для заполнения'],
-    minlength: 8,
     select: false,
   },
 }, { versionKey: false });

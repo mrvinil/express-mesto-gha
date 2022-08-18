@@ -5,7 +5,7 @@ const linkRegExp = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-
 
 const idValidation = celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().alphanum().length(24).hex(),
+    userId: Joi.string().alphanum().length(24).hex(),
   }),
 });
 
@@ -19,7 +19,7 @@ const loginValidation = celebrate({
 const userValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(20),
+    about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(linkRegExp),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
@@ -36,7 +36,7 @@ const cardValidation = celebrate({
 const userAboutValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    about: Joi.string().required().min(2).max(20),
+    about: Joi.string().required().min(2).max(30),
   }),
 });
 
