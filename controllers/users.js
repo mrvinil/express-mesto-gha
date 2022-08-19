@@ -1,6 +1,4 @@
-const validator = require('validator');
 const bcrypt = require('bcryptjs');
-// const { isEmail } = require('validator');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
@@ -36,30 +34,26 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-
-  if (!validator.isEmail(email)) {
-    next(new BadRequest('Некорректные данные'));
-  } else {
-    bcrypt.hash(password, 10)
-      .then((hash) => User.create({
-        name, about, avatar, email, password: hash,
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    })
+      .then((user) => {
+        // eslint-disable-next-line no-shadow
+        const { password, ...response } = user._doc;
+        res.send({ response });
       })
-        .then((user) => {
-          // eslint-disable-next-line no-shadow
-          const { password, ...response } = user._doc;
-          res.send({ response });
-        })
-        .catch((err) => {
-          if (err.name === 'ValidationError') {
-            next(new BadRequest('Некорректные данные'));
-          } else if (err.code === 11000) {
-            next(new Conflict('Email уже зарегистрирован'));
-          } else {
-            next(err);
-          }
-        }));
-  }
+      .catch((err) => {
+        if (err.name === 'ValidationError') {
+          next(new BadRequest('Некорректные данные'));
+        } else if (err.code === 11000) {
+          next(new Conflict('Email уже зарегистрирован'));
+        } else {
+          next(err);
+        }
+      }));
 };
+
 
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
