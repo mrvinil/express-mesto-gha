@@ -54,7 +54,6 @@ const createUser = (req, res, next) => {
       }));
 };
 
-
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
   const userId = req.user._id;
