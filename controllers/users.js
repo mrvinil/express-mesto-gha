@@ -40,8 +40,8 @@ const createUser = (req, res, next) => {
     })
       .then((user) => {
         // eslint-disable-next-line no-shadow
-        const { password, ...response } = user._doc;
-        res.send({ response });
+        const { password, ...newUser } = user._doc;
+        res.send({ newUser });
       })
       .catch((err) => {
         if (err.name === 'ValidationError') {
