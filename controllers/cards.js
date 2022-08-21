@@ -64,7 +64,7 @@ const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
-        throw NotFound('Передан несуществующий id карточки');
+        throw new NotFound('Передан несуществующий id карточки');
       }
       res.send({ likes: card.likes });
     })
