@@ -3,7 +3,6 @@
 /.htaccess*
 /web.config
 /*web.config
-/*.log
 /*.sql
 
 /*.txt

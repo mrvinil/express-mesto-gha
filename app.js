@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const auth = require('./middlewares/auth');
 const NotFound = require('./errors/NotFound');
 const { errorHandler } = require('./middlewares/errorHandler');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -17,8 +18,10 @@ app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-app.use('/', authRoutes);
+// Логгер запросов нужно подключить до всех обработчиков роутов:
+app.use(requestLogger); // подключаем логгер запросов
 
+app.use('/', authRoutes);
 app.use('/users', auth, userRoutes);
 app.use('/cards', auth, cardsRoutes);
 
@@ -26,7 +29,10 @@ app.use((req, res, next) => {
   next(new NotFound('Страница не найдена'));
 });
 
-app.use(errors());
+// Логгер ошибок нужно подключить после обработчиков роутов и до обработчиков ошибок:
+app.use(errorLogger); // подключаем логгер ошибок
+
+app.use(errors()); // обработчик ошибок celebrate
 app.use(errorHandler);
 
 app.listen(PORT, (err) => {
